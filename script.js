@@ -5,11 +5,19 @@ let dropMaker; // Will store our timer that creates drops regularly
 let score = 0;
 const scoreDisplay = document.getElementById("score");
 
-let time = 30;
+let time = 0;
 const timeDisplay = document.getElementById("time");
 
 const endScreen = document.getElementById("end-screen");
 const gameMessage = document.getElementById("game-message");
+
+const startBtn = document.getElementById("start-btn");
+const difficultyLevel = document.getElementById("difficulty-modes");
+
+const gameStart = new Audio("sounds/game-start.mp3");
+const gameWin = new Audio("sounds/game-win.mp3");
+const gameOver = new Audio("sounds/game-over.mp3");
+const waterDrop = new Audio("sounds/water-drop.mp3");
 
 const winMessages = [
   "Congratulations! You won the game!",
@@ -23,12 +31,43 @@ const loseMessages = [
   "Try again!"
 ]
 
+// Disable start button so player cannot play until difficulty is chosen
+startBtn.disabled = true;
+
+// Get the time for the level
+function getLevelTime(level) {
+  if (level === "easy") {
+    return 30;
+  }
+  else if (level === "medium") {
+    return 25;
+  }
+  else if (level === "hard") {
+    return 20;
+  }
+  return 0;
+}
+
+// Wait for player to select a difficulty
+difficultyLevel.addEventListener("change", function() {
+  startBtn.disabled = !difficultyLevel.value;
+
+  const level = difficultyLevel.value;
+  timeDisplay.textContent = getLevelTime(level);
+});
+
 // Wait for button click to start the game
-document.getElementById("start-btn").addEventListener("click", startGame);
+startBtn.addEventListener("click", function() {
+  gameStart.play();
+  startGame();
+});
 
 function startGame() {
   // Prevent multiple games from running at once
   if (gameRunning) return;
+
+  const level = difficultyLevel.value;
+  if (!level) return;
 
   endScreen.classList.add("hidden");
 
@@ -38,13 +77,13 @@ function startGame() {
   score = 0;
   scoreDisplay.textContent = score;
 
-  time = 30;
+  time = getLevelTime(level);
   timeDisplay.textContent = time;
 
   startCountdown();
 
   // Create new drops every second (1000 milliseconds)
-  dropMaker = setInterval(createDrop, 1000);
+  dropMaker = setInterval(createDrop, 700);
 }
 
 function createDrop() {
@@ -52,9 +91,26 @@ function createDrop() {
   const drop = document.createElement("div");
   drop.className = "water-drop";
 
+  // Decide which water drop it'll be
+  const isBad = Math.random() < 0.1;
+
+  if (isBad) {
+    drop.classList.add("bad-drop");
+  }
+ 
+
   // Update score when clicked
   drop.addEventListener("click", function() {
-    score++;
+    waterDrop.play();
+    if (isBad) {
+      if (score > 0) {
+        score--;
+      }
+    }
+    else {
+      score++;
+    }
+
     scoreDisplay.textContent = score;
     drop.remove();
   });
@@ -83,6 +139,7 @@ function createDrop() {
   });
 }
 
+// Countdown for game
 function startCountdown() {
   const countdownInterval = setInterval(function() {
     time--;
@@ -97,14 +154,17 @@ function startCountdown() {
   }, 1000);
 }
 
+// Ends game and shows ending result
 function endGame() {
   clearInterval(dropMaker);
   gameRunning = false;
 
   if (score >= 20) {
+    gameWin.play();
     const random = Math.floor(Math.random() * winMessages.length);
     gameMessage.textContent = winMessages[random];
   } else {
+    gameOver.play();
     const random = Math.floor(Math.random() * loseMessages.length);
     gameMessage.textContent = loseMessages[random];
   }

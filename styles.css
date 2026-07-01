@@ -26,11 +26,12 @@ Fonts:
 
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     background-color: rgba(255, 250, 240);
-    font-family: Arial, sans-serif;
+    font-family: 'Proxima Nova', 'Avenir', Georgia;
 }
 
 .game-wrapper {
@@ -52,7 +53,7 @@ body {
 }
 
 .timer {
-    color: rgba(191, 107, 69);
+    color: #F16061;
     flex: 0 1 auto;
     font-size: 24px;
     font-weight: bold;
@@ -71,8 +72,8 @@ body {
 
 #start-btn {
     padding: 8px 16px;
-    background-color: rgba(0, 51, 102);
-    color: white;
+    background-color: #8BD1CB;
+    color: #000000;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -81,11 +82,11 @@ body {
 }
 
 #start-btn:hover {
-    background-color: rgba(0, 51, 102, 0.712);
+    background-color: #629994;
 }
 
 .score {
-    color: rgba(191, 107, 69);
+    color: #F16061;
     flex: 0 1 auto;  /* Don't grow, can shrink, auto basis */
     font-size: 24px;
     font-weight: bold;
@@ -114,9 +115,9 @@ body {
 }
 
 .game-title {
-    color: rgba(191, 107, 69);
+    color: #159A48;
     font-size: 48px;
-    margin-top: 0;
+    margin-top: 10px;
     margin-bottom: 5px;  /* reduced from 20px */
     text-align: center;
 }
@@ -153,6 +154,36 @@ body {
   left: 10px;
   width: 150px;
   z-index: 10;
+}
+
+#difficulty-modes {
+  color: rgba(0, 51, 102);
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+#difficulty-modes:focus {
+  border: 3px solid rgba(191, 107, 69);
+}
+
+footer {
+  margin-top: 30px;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  height: 25vh;
+  background-color: #FFC907;
+}
+
+a {
+  color: black;
+  transition: color .2s;
+}
+
+a:hover {
+  color: black;
+  text-decoration: underline;
 }
 
 @keyframes dropFall {
